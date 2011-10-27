@@ -228,7 +228,7 @@ dnl Validate yacc
 yacc_ok=1
 if echo "$YACC" | grep bison > /dev/null; then
 	# NOTE: m4 removes [], that's why it needs to be escaped
-	bison_version=[`$YACC --version | head -1 | sed -e 's/[^0-9.]*\([0-9.]\+\)$/\1/'`]
+	bison_version=[`$YACC --version | head -n 1 | sed -e 's/[^0-9.]*\([0-9.]\+\)$/\1/'`]
 	bison_version_major=`echo $bison_version | cut -d. -f1`
 	bison_version_minor=`echo $bison_version | cut -d. -f2`
 	if test "$bison_version_major" -lt 2 -o "$bison_version_minor" -lt 4; then
@@ -358,7 +358,7 @@ dnl How to do static linking?
 dnl ***************************************************************************
 
 AC_MSG_CHECKING(how to enable static linking for certain libraries)
-ldversion=`ld -V 2>&1 | head -1`
+ldversion=`ld -V 2>&1 | head -n 1`
 if echo $ldversion | egrep "GNU|Solaris" > /dev/null; then
         LD_START_STATIC="-Wl,-Bstatic"
         LD_END_STATIC="-Wl,-Bdynamic"
@@ -476,7 +476,11 @@ if test "x$enable_linux_caps" = "xyes" -o "x$enable_linux_caps" = "xauto"; then
 	AC_CHECK_LIB(cap, cap_set_proc, LIBCAP_LIBS="-lcap")
 fi
 
-AC_CHECK_FUNCS(strdup strtol strtoll strtoimax inet_aton inet_ntoa getopt_long getaddrinfo getutent pread pwrite strcasestr memrchr clock_gettime localtime_r gmtime_r)
+AC_CHECK_FUNCS(strdup strtol strtoll strtoimax inet_aton inet_ntoa getopt_long getaddrinfo getutent pread pwrite strcasestr memrchr localtime_r gmtime_r)
+old_LIBS=$LIBS
+LIBS=$BASE_LIBS
+AC_CHECK_FUNCS(clock_gettime)
+LIBS=$old_LIBS
 
 dnl ***************************************************************************
 dnl libevtlog headers/libraries
@@ -677,6 +681,10 @@ if test "x$OPENSSL_LIBS" != "x"; then
         fi
 else
         enable_ssl="no"
+fi
+
+if test "x$enable_ssl" = "xno"; then
+	OPENSSL_LIBS=""
 fi
 
 dnl
@@ -1059,6 +1067,7 @@ AC_DEFINE_UNQUOTED(ENABLE_LINUX_CAPS, `enable_value $enable_linux_caps`, [Enable
 AC_DEFINE_UNQUOTED(ENABLE_PCRE, `enable_value $enable_pcre`, [Enable PCRE support])
 AC_DEFINE_UNQUOTED(ENABLE_ENV_WRAPPER, `enable_value $enable_env_wrapper`, [Enable environment wrapper support])
 AC_DEFINE_UNQUOTED(ENABLE_SYSTEMD, `enable_value $enable_systemd`, [Enable systemd support])
+AC_DEFINE_UNQUOTED(WITH_LIBSYSTEMD, `enable_value $with_libsystemd`, [Compile with libsystemd-daemon])
 
 AM_CONDITIONAL(ENABLE_ENV_WRAPPER, [test "$enable_env_wrapper" = "yes"])
 AM_CONDITIONAL(ENABLE_SYSTEMD, [test "$enable_systemd" = "yes"])
