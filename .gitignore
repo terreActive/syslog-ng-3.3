@@ -48,4 +48,7 @@ m4/pkg.m4
 /debian/patches/
 /debian/man/syslog-ng.8
 /debian/man/loggen.1
+/debian/control
+/debian/libsyslog-ng-[0-9]*.install
+/debian/libsyslog-ng-[0-9]*.lintian-overrides
 /.pc/
