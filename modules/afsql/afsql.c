@@ -35,7 +35,10 @@
 
 #include <dbi/dbi.h>
 #include <string.h>
+
+#if ENABLE_SSL
 #include <openssl/md5.h>
+#endif
 
 /* field flags */
 enum
@@ -964,9 +967,9 @@ afsql_dd_init(LogPipe *s)
   if (!log_dest_driver_init_method(s))
     return FALSE;
 
-  if (!self->columns || !self->indexes || !self->values)
+  if (!self->columns || !self->values)
     {
-      msg_error("Default columns, values and indexes must be specified for database destinations",
+      msg_error("Default columns and values must be specified for database destinations",
                 evt_tag_str("database type", self->type),
                 NULL);
       return FALSE;
@@ -1175,6 +1178,7 @@ afsql_dd_free(LogPipe *s)
   if (self->null_value)
     g_free(self->null_value);
   string_list_free(self->columns);
+  string_list_free(self->indexes);
   string_list_free(self->values);
   log_template_unref(self->table);
   g_hash_table_destroy(self->validated_tables);
