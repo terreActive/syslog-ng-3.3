@@ -15,7 +15,6 @@ Build-Depends: debhelper (>= 8),
 	       libwrap0-dev,
 	       libpcre3-dev,
 	       libcap-dev [linux-any],
-	       libsystemd-daemon-dev [linux-any],
 	       hardening-includes
 Build-Conflicts: autoconf2.13
 Standards-Version: 3.9.2
