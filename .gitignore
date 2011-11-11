@@ -43,6 +43,7 @@ m4/pkg.m4
 /debian/syslog-ng-mod-mongodb/
 /debian/syslog-ng-mod-sql/
 /debian/syslog-ng/
+/debian/syslog-ng-dbg/
 /debian/libsyslog-ng-*/
 /debian/tmp/
 /debian/patches/
