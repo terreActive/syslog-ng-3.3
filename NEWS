@@ -1,5 +1,5 @@
 3.3.2
-	Sat, 29 Oct 2011 17:37:40 +0200
+	Sat, 12 Nov 2011 20:48:53 +0100
 
 	Bugfixes:
 	=========
@@ -20,6 +20,37 @@
 	  the kernel reports that only a smaller portion of the actual write
 	  request could be accomplished.
 
+	* Fixed an "internal error duplicate config element" error during
+	  reload due to an invalid bugfix applied for 3.3.1.  Older beta
+	  versions of 3.3 were not affected.
+
+	* Fixed a memory leak that causes macro based file destinations to
+	  leak their queue when destination files are closed due to
+	  time-reap().
+
+	* Fixed the handling of the condition() option for rewrite rules.
+
+	* Fixed a race condition in value-pairs support, potentially causing
+	  heap corruption problems when $(format-json) is used in threaded
+	  mode.
+
+	* Fixed a memory leak in value-pairs template function argument
+	  parsing, fixing a leak if $(format-json) is used.
+
+	* Repeated definitions of source, destination, filter, rewrite,
+	  parser and block elements are not allowed by default anymore.
+	  These are reported as configuration errors unless
+
+              @define allow-config-dups 1
+
+          is specified in the configuration file.
+
+	* Fixed pdbtool error reporting in "pdbtool test" to make it easier
+	  to understand what went wrong.
+
+	* Added an SQL connection health check in case an INSERT failed.
+	  This way syslog-ng handles SQL server timeouts better.
+
 	* Fixed support for systemd socket activation. Previously such
 	  sockets were not set to non-blocking mode, causing syslog-ng to
           hang.
@@ -39,6 +70,38 @@
 	* Fixed a minor memory leak in the sql() driver that can increase
 	  the memory usage on every reload (indexes() parameter wasn't
 	  properly freed on reload).
+
+	Credits:
+	========
+	syslog-ng is developed as a community project, and as such it relies
+        on volunteers to do the work necessarily to produce syslog-ng.
+
+        Reporting bugs, testing changes, writing code or simply providing
+        feedback are all important contributions, so please if you are a
+        user of syslog-ng, contribute.
+
+        These people have helped in this release:
+
+          Anthony Lineham (Allied Telesys)
+          Arkadiusz Miśkiewicz (PLD Linux)
+          Attila Szalay (BalaBit)
+          Balazs Scheidler (BalaBit)
+          Balint Kovacs (BalaBit)
+          Daniel Ankers
+          Dave Rawks (Pandora)
+          Enrico Scholz (Technische Universitat Chemnitz)
+          Eric Lindvall (Seven Scale)
+          Erik Maciejewski
+          Gergely Nagy (BalaBit)
+          Hery Fanomezantsoa
+          Jack Nagel
+          Jakub Jankowski (SuperHost.pl)
+          Leonid Isaev (Indiana University)
+          Martin Holste
+          Michael Sterrett (Gentoo)
+          Patrick H.
+          Peter Czanik (BalaBit)
+          Viktor Juhasz (BalaBit)
 
 3.3.1
 	Sat, 01 Oct 2011 13:17:56 +0200
